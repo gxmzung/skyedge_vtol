@@ -1,0 +1,15 @@
+from enum import Enum
+
+class MissionState(str, Enum):
+    IDLE = "IDLE"
+    ARMING = "ARMING"
+    TAKEOFF = "TAKEOFF"
+    SEARCH_LINE = "SEARCH_LINE"
+    FOLLOW_LINE = "FOLLOW_LINE"
+    SEARCH_MARKER = "SEARCH_MARKER"
+    ALIGN_MARKER = "ALIGN_MARKER"
+    RESCUE_ACTION = "RESCUE_ACTION"
+    RETURN_HOME = "RETURN_HOME"
+    LAND = "LAND"
+    DONE = "DONE"
+    FAILSAFE = "FAILSAFE"
