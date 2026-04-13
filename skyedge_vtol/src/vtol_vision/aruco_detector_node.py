@@ -1,4 +1,6 @@
 import json
+import time
+from typing import Optional, Tuple
 
 import cv2
 import numpy as np
@@ -10,125 +12,110 @@ from std_msgs.msg import String
 
 
 class ArucoDetectorNode(Node):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__('aruco_detector_node')
 
         self.declare_parameter('camera_topic', '/camera/image_raw')
-        self.declare_parameter('target_marker_id', 0)
-        self.declare_parameter('publish_debug_image', True)
+        self.declare_parameter('aruco_dict_name', 'DICT_4X4_50')
+        self.declare_parameter('aruco_target_id', 1)
+        self.declare_parameter('aruco_marker_length_m', 0.15)
+        self.declare_parameter('aruco_publish_debug', False)
+        self.declare_parameter('aruco_no_image_timeout_sec', 1.0)
 
-        self.camera_topic = self.get_parameter('camera_topic').get_parameter_value().string_value
-        self.target_marker_id = self.get_parameter('target_marker_id').get_parameter_value().integer_value
-        self.publish_debug_image = self.get_parameter('publish_debug_image').get_parameter_value().bool_value
+        self.camera_topic = self.get_parameter('camera_topic').value
+        self.target_id = int(self.get_parameter('aruco_target_id').value)
+        self.marker_length = float(self.get_parameter('aruco_marker_length_m').value)
+        self.publish_debug = bool(self.get_parameter('aruco_publish_debug').value)
+        self.timeout_sec = float(self.get_parameter('aruco_no_image_timeout_sec').value)
+
+        dict_name = self.get_parameter('aruco_dict_name').value
+        dict_id = getattr(cv2.aruco, dict_name, cv2.aruco.DICT_4X4_50)
+        self.aruco_dict = cv2.aruco.getPredefinedDictionary(dict_id)
+        self.detector = cv2.aruco.ArucoDetector(self.aruco_dict, cv2.aruco.DetectorParameters())
 
         self.bridge = CvBridge()
+        self.last_image_ts = 0.0
 
         self.result_pub = self.create_publisher(String, '/vision/aruco_result', 10)
-        self.debug_pub = self.create_publisher(Image, '/vision/aruco_debug', 10)
-
-        self.image_sub = self.create_subscription(
-            Image,
-            self.camera_topic,
-            self.image_callback,
-            10,
-        )
-
-        self.aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
-        self.aruco_params = cv2.aruco.DetectorParameters_create()
+        self.debug_pub = self.create_publisher(Image, '/vision/aruco_debug', 10) if self.publish_debug else None
+        self.image_sub = self.create_subscription(Image, self.camera_topic, self.on_image, 10)
+        self.timer = self.create_timer(0.2, self.on_timer)
 
         self.get_logger().info(f'Aruco detector subscribed to {self.camera_topic}')
 
-    def image_callback(self, msg: Image):
-        try:
-            frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-        except Exception as e:
-            self.get_logger().error(f'cv_bridge conversion failed: {e}')
+    def on_timer(self) -> None:
+        if self.last_image_ts == 0.0:
             return
+        if time.time() - self.last_image_ts > self.timeout_sec:
+            self.publish_result(False, -1, 0.0, 0.0, 0.0, 0.0)
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    def on_image(self, msg: Image) -> None:
+        self.last_image_ts = time.time()
+        frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        result = self.detect_marker(frame)
+        found, target_id, offset_x, offset_y, area_ratio, distance_hint, debug_img = result
+        self.publish_result(found, target_id, offset_x, offset_y, area_ratio, distance_hint)
+        if self.debug_pub is not None and debug_img is not None:
+            self.debug_pub.publish(self.bridge.cv2_to_imgmsg(debug_img, encoding='bgr8'))
 
-        corners, ids, rejected = cv2.aruco.detectMarkers(
-            gray,
-            self.aruco_dict,
-            parameters=self.aruco_params
-        )
+    def detect_marker(self, frame: np.ndarray) -> Tuple[bool, int, float, float, float, float, Optional[np.ndarray]]:
+        h, w = frame.shape[:2]
+        corners, ids, _ = self.detector.detectMarkers(frame)
+        debug_img = frame.copy() if self.publish_debug else None
 
-        result = {
-            'detected': False,
-            'target_id': int(self.target_marker_id),
-            'marker_id': -1,
-            'offset_x': 0.0,
-            'offset_y': 0.0,
-            'area': 0.0,
+        if ids is None or len(ids) == 0:
+            return False, -1, 0.0, 0.0, 0.0, 0.0, debug_img
+
+        ids_flat = ids.flatten().tolist()
+        best_index = None
+        if self.target_id in ids_flat:
+            best_index = ids_flat.index(self.target_id)
+        else:
+            best_index = 0
+
+        target_id = int(ids_flat[best_index])
+        pts = corners[best_index][0]
+        cx = float(np.mean(pts[:, 0]))
+        cy = float(np.mean(pts[:, 1]))
+        offset_x = (cx - (w / 2.0)) / (w / 2.0)
+        offset_y = (cy - (h / 2.0)) / (h / 2.0)
+
+        area = float(cv2.contourArea(pts.astype(np.float32)))
+        area_ratio = min(area / max(float(w * h), 1.0), 1.0)
+        distance_hint = 0.0
+        if area > 1.0:
+            distance_hint = (self.marker_length * 1000.0) / np.sqrt(area)
+
+        if debug_img is not None:
+            cv2.aruco.drawDetectedMarkers(debug_img, corners, ids)
+            cv2.circle(debug_img, (int(cx), int(cy)), 6, (0, 0, 255), -1)
+            cv2.putText(debug_img, f'id={target_id}', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1)
+            cv2.putText(debug_img, f'offset_x={offset_x:.3f}', (10, 45), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1)
+            cv2.putText(debug_img, f'area_ratio={area_ratio:.4f}', (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1)
+
+        return True, target_id, float(offset_x), float(offset_y), float(area_ratio), float(distance_hint), debug_img
+
+    def publish_result(self, found: bool, target_id: int, offset_x: float, offset_y: float, area_ratio: float, distance_hint: float) -> None:
+        payload = {
+            'found': bool(found),
+            'target_id': int(target_id),
+            'offset_x': float(offset_x),
+            'offset_y': float(offset_y),
+            'area_ratio': float(area_ratio),
+            'distance_hint': float(distance_hint),
+            'timestamp': time.time(),
         }
-
-        debug_frame = frame.copy()
-
-        if ids is not None and len(ids) > 0:
-            cv2.aruco.drawDetectedMarkers(debug_frame, corners, ids)
-
-            ids_flat = ids.flatten()
-            found_target = False
-
-            for i, marker_id in enumerate(ids_flat):
-                if int(marker_id) == int(self.target_marker_id):
-                    pts = corners[i][0]
-                    center_x = float(np.mean(pts[:, 0]))
-                    center_y = float(np.mean(pts[:, 1]))
-
-                    h, w = frame.shape[:2]
-                    offset_x = (center_x - (w / 2.0)) / (w / 2.0)
-                    offset_y = (center_y - (h / 2.0)) / (h / 2.0)
-
-                    area = cv2.contourArea(pts.astype(np.float32))
-
-                    result = {
-                        'detected': True,
-                        'target_id': int(self.target_marker_id),
-                        'marker_id': int(marker_id),
-                        'offset_x': float(offset_x),
-                        'offset_y': float(offset_y),
-                        'area': float(area),
-                    }
-
-                    cv2.circle(debug_frame, (int(center_x), int(center_y)), 6, (0, 255, 0), -1)
-                    cv2.putText(
-                        debug_frame,
-                        f'id={marker_id} ox={offset_x:.2f} oy={offset_y:.2f}',
-                        (int(center_x) + 10, int(center_y)),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        0.5,
-                        (0, 255, 0),
-                        2
-                    )
-
-                    found_target = True
-                    break
-
-            if not found_target:
-                result['detected'] = False
-
-        self.result_pub.publish(String(data=json.dumps(result)))
-
-        if self.publish_debug_image:
-            try:
-                debug_msg = self.bridge.cv2_to_imgmsg(debug_frame, encoding='bgr8')
-                debug_msg.header = msg.header
-                self.debug_pub.publish(debug_msg)
-            except Exception as e:
-                self.get_logger().error(f'debug image publish failed: {e}')
+        msg = String()
+        msg.data = json.dumps(payload)
+        self.result_pub.publish(msg)
 
 
-def main(args=None):
-    rclpy.init(args=args)
+def main() -> None:
+    rclpy.init()
     node = ArucoDetectorNode()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
 
 
 if __name__ == '__main__':
