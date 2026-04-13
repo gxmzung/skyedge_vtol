@@ -1,0 +1,21 @@
+/**:
+  ros__parameters:
+    vtol.use_sim: true
+    vtol.drone_id: "drone1"
+    vtol.takeoff_altitude: 10.0
+    vtol.hover_altitude: 10.0
+    vtol.cruise_altitude: 20.0
+    vtol.max_velocity: 5.0
+    vtol.marker_target_id: 1
+    vtol.camera_topic: "/camera/image_raw"
+    vtol.home_position: [0.0, 0.0, -10.0]
+    vtol.search_timeout_sec: 20.0
+    vtol.follow_timeout_sec: 30.0
+    vtol.align_timeout_sec: 15.0
+    vtol.rescue_timeout_sec: 20.0
+    vtol.line_h_low: 20
+    vtol.line_h_high: 40
+    vtol.line_s_low: 80
+    vtol.line_s_high: 255
+    vtol.line_v_low: 80
+    vtol.line_v_high: 255
