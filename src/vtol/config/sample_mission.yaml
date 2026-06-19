@@ -1,0 +1,31 @@
+mission_name: skyedge_vtol_sample_mission
+vehicle_type: vtol
+mode: simulation
+
+safety:
+  min_battery_percent: 25
+  min_signal_strength: 40
+  min_gps_satellites: 8
+  max_temperature: 75
+  max_altitude: 120
+
+waypoints:
+  - name: launch
+    x: 0
+    y: 0
+    z: 10
+
+  - name: search_zone_a
+    x: 30
+    y: 15
+    z: 40
+
+  - name: search_zone_b
+    x: 70
+    y: 40
+    z: 45
+
+  - name: return_home
+    x: 0
+    y: 0
+    z: 20
