@@ -1,15 +1,29 @@
-node_modules/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 .venv/
 venv/
+env/
+
+# ROS2 / colcon generated artifacts
 build/
-target/
-obj/
-__pycache__/
-.pytest_cache/
-.dart_tool/
+install/
+log/
+
+# IDE
+.vscode/
 .idea/
-*.sqlite
-*.db
-*.log
-.env
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+*.tmp
+
+# Binary outputs
+*.out
+*.exe

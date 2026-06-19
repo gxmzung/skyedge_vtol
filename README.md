@@ -1,4 +1,3 @@
-
 # SkyEdge VTOL Mission Stack
 
 SkyEdge VTOL Mission Stack is a ROS 2 / PX4-based VTOL mission software prototype.
@@ -204,6 +203,23 @@ Not yet claimed:
 - complete PX4 integration
 - production deployment
 - autonomous operation approval
+
+---
+
+---
+
+## Validation
+
+This repository includes lightweight validation scripts.
+
+| Script | Role |
+| --- | --- |
+| `scripts/check_structure.py` | Checks required repository structure |
+| `scripts/smoke_test.py` | Runs minimal mission-stack smoke tests |
+| `.github/workflows/skyedge-ci.yml` | Runs checks through GitHub Actions |
+
+The current validation target is not flight certification.  
+It is repository-level sanity checking for mission software architecture.
 
 ---
 
