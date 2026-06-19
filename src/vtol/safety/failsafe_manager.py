@@ -1,4 +1,4 @@
-from src.vtol.telemetry.telemetry_health import TelemetryHealth
+from telemetry.telemetry_health import TelemetryHealth
 
 
 class FailsafeManager:
