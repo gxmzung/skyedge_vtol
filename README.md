@@ -1,5 +1,7 @@
 # SkyEdge VTOL Mission Stack
 
+![SkyEdge CI](https://github.com/gxmzung/skyedge_vtol/actions/workflows/skyedge-ci.yml/badge.svg)
+
 SkyEdge VTOL Mission Stack is a ROS 2 / PX4-based VTOL mission software prototype.
 
 This repository focuses on the software layer around VTOL mission execution, including mission state management, PX4 bridge logic, safety handling, guidance logic, and vision-assisted mission support.
