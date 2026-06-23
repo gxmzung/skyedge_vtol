@@ -4,10 +4,78 @@
 
 SkyEdge VTOL Mission Stack is a ROS 2 / PX4-based VTOL mission software prototype.
 
-This repository focuses on the software layer around VTOL mission execution, including mission state management, PX4 bridge logic, safety handling, guidance logic, and vision-assisted mission support.
+# SkyEdge VTOL
 
-The project is not presented as a completed flight-certified system.  
-It is a software-side mission stack prototype intended for simulation, architecture validation, and future hardware integration.
+ROS2/PX4-oriented VTOL mission stack with telemetry safety, guidance, vision assist, hardware prototypes, smoke tests, and CI.
+
+## Overview
+
+SkyEdge VTOL is a UAV mission software project focused on autonomous flight workflow, telemetry safety, mission flow, and ROS2/PX4-based system integration.
+
+This project is connected to the KRAC 24th Robot Aircraft Competition.
+
+## Mission
+
+Build and understand a VTOL mission system that connects:
+
+* Flight control
+* Mission planning
+* Telemetry monitoring
+* Vision-assisted detection
+* Safety and failsafe logic
+* Ground control workflow
+
+## System Concept
+
+The system is designed around the following structure:
+
+1. Mission Planning
+2. ROS2 Node Control
+3. PX4 Offboard Control
+4. Telemetry Monitoring
+5. Vision Assist
+6. Failsafe Transition
+7. Flight Log Review
+
+## Key Technologies
+
+* ROS2
+* PX4
+* Python
+* Telemetry
+* Mission Flow
+* ArUco / Vision Assist
+* UAV Simulation
+* Safety Check
+
+## My Focus
+
+I focus on understanding the software side of UAV systems:
+
+* Mission flow documentation
+* PX4/ROS2 structure
+* Telemetry safety logic
+* Flight state transition
+* System-level explanation
+
+## Roadmap
+
+### v0.1
+
+* Mission flow documentation
+* PX4/ROS2 structure study
+
+### v0.5
+
+* Telemetry safety check
+* Simulated mission flow
+
+### v1.0
+
+* Integrated mission workflow
+* Vision assist module
+* Flight test preparation
+
 
 ---
 
