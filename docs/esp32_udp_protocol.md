@@ -26,3 +26,5 @@ Safety Boundary
 Vision packets must not directly override PX4 control.
 
 They should be treated as advisory input for the mission layer.
+
+```

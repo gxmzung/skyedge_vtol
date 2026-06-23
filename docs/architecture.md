@@ -26,3 +26,5 @@ telemetry-based safety checks
 waypoint-level guidance logic
 PX4 offboard integration boundaries
 simulation-first validation
+
+```

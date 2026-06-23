@@ -17,3 +17,5 @@ Low signal	signal < 40
 GPS unsafe	satellites < 8
 High temperature	temperature > 75
 Altitude unsafe	altitude < 0 or altitude > 120
+
+```

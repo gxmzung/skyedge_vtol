@@ -27,3 +27,5 @@ Vision module must not directly command flight controller output
 Low-confidence detection must be ignored
 Manual override and failsafe always have priority
 Detection result should be logged for later review
+
+```
