@@ -1,3 +1,32 @@
+﻿<!-- PORTFOLIO-HEADER:START -->
+
+# skyedge_vtol
+
+> ROS2/PX4 VTOL mission stack with telemetry safety, vision assist, failsafe logic, simulation, and CI.
+
+**Domain:** UAV · ROS2 · PX4 · Autonomous Mission Systems  
+**Role:** Mission Software · System Integration  
+**Status:** Prototype / Competition Project
+
+## Portfolio Summary
+
+### System Focus
+
+- ROS2 / PX4 mission integration
+- telemetry health and safety monitoring
+- autonomous mission-state transitions
+- vision-assisted mission logic
+- failsafe / fallback handling
+- SITL-oriented verification and CI
+
+### Engineering Boundary
+
+> Simulation, software verification, and real-flight verification are documented separately. Implemented software is not presented as hardware-verified unless field testing has been completed.
+
+---
+
+<!-- PORTFOLIO-HEADER:END -->
+
 # SkyEdge VTOL Mission Stack
 
 ![SkyEdge CI](https://github.com/gxmzung/skyedge_vtol/actions/workflows/skyedge-ci.yml/badge.svg)
@@ -328,3 +357,4 @@ This structure makes it easier to reason about responsibility boundaries before 
 This project is not a finished VTOL autopilot.
 
 It is a software-side mission stack prototype designed to show how PX4, ROS 2, mission management, safety handling, and vision nodes can be organized before moving toward real hardware integration.
+
