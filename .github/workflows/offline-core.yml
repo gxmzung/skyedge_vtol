@@ -4,21 +4,33 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   offline-core:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      - name: Check repository structure
-        run: python scripts/check_structure.py
-      - name: Core unit regression tests
-        run: python -m unittest discover -s tests -v
-      - name: Smoke test
-        run: python scripts/smoke_test.py
-      - name: Offline mission demo
-        run: python src/vtol/mission_demo.py
+      - name: Capture reproducibility metadata
+        run: |
+          mkdir -p evidence
+          printf 'repository=%s\ncheckout_sha=%s\nevent_sha=%s\npr_head_sha=%s\nrun_id=%s\nrunner=%s\n' "$GITHUB_REPOSITORY" "$(git rev-parse HEAD)" "$GITHUB_SHA" "${{ github.event.pull_request.head.sha || github.sha }}" "$GITHUB_RUN_ID" "$RUNNER_OS" > evidence/metadata.txt
+          python --version >> evidence/metadata.txt 2>&1
+      - name: Offline structure, unit, smoke and demo evidence gate
+        run: |
+          set -o pipefail
+          python scripts/verify_offline.py 2>&1 | tee evidence/verify.log
+      - name: Upload offline evidence (not SITL proof)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: vtol-mission-offline-${{ github.run_id }}
+          path: evidence/
+          if-no-files-found: error
+          retention-days: 7
