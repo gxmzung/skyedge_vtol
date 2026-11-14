@@ -17,7 +17,9 @@ Build a reproducible, simulation-first portfolio around mission-state transition
 | Guidance | 3D waypoint distance and threshold checks | Unit tests |
 | PX4 interface | Local in-memory bridge stub and ROS 2 message scaffold | Stub behavior only; **not** real PX4 |
 | Vision | ArUco / line-tracking prototypes | Code present; integration not established |
-| ROS 2 | Packaged Humble nodes, ROS topic mock bridge and safety guard | `colcon build` + basic DDS runtime topic smoke CI; not PX4 SITL |
+| ROS 2 | Humble packages, mock DDS status and safety alerts | `colcon build` + ROS 2 runtime topic smoke CI; not PX4 SITL |
+| PX4 SITL observer | Read-only `px4_msgs` interfaces, freshness validation | Unit + ROS 2 package CI only; live SITL still **NOT VERIFIED** |
+| Evidence pipeline | ROS 2 observer JSONL recorder + metrics reporter | Pure Python tests and synthetic DDS recorder smoke; not live SITL proof |
 | Real aircraft | Not implemented or validated | **Unsupported / blocked** |
 
 ## Quick start — dependency-free core tests
@@ -45,7 +47,7 @@ tests/                   # Offline unittest safety regression suite
 docs/                    # Verification and migration decisions
 ```
 
-The former project-branded workspace directory is now `ros2_ws/`. This is a **directory-only migration**, not evidence of ROS 2 build or SITL integration. Existing historical documentation is retained for provenance.
+The former project-branded workspace directory is now `ros2_ws/`. ROS 2 Humble CI verifies its package build and mock topic traffic, but **not live PX4 SITL integration**. Existing historical documentation is retained for provenance.
 
 ## Safety boundaries
 
@@ -55,16 +57,16 @@ The former project-branded workspace directory is now `ros2_ws/`. This is a **di
 4. Real-aircraft launch is disabled until there is a separately reviewed vehicle adapter, an independent operator-controlled safety path, and documented tests.
 5. Do not use this research code to fly or control a physical aircraft.
 
-See [Verification Matrix](docs/VERIFICATION_MATRIX.md), [ROS 2 Topic Contracts](docs/ROS2_CONTRACTS_V2.md), [V4 Read-Only SITL Plan](docs/PX4_SITL_V4.md), and [Migration Plan](docs/REFACTOR_PLAN.md).
+See [Verification Matrix](docs/VERIFICATION_MATRIX.md), [ROS 2 Topic Contracts](docs/ROS2_CONTRACTS_V2.md), [V4 Read-Only Observer](docs/PX4_SITL_V4.md), [V5 Evidence Protocol](docs/PX4_SITL_V5_EVIDENCE.md), and [Migration Plan](docs/REFACTOR_PLAN.md).
 
-## Development roadmap
+## Development status
 
-- **V1 (this PR):** honest README, regression tests, fail-closed telemetry checks, disable legacy real launch.
-- **V2 (verified):** ROS 2 Humble `colcon build` and mock DDS topic communication checks.
-- **V3 (PR pending):** remove shadow duplicate node files and test stale heartbeat alert over ROS 2 topics.
-- **V3:** ROS 2/PX4 SITL adapter with explicit message contracts, simulation logs, and CI evidence.
-- **V4 (in PR):** optional read-only PX4 SITL telemetry observer with fail-closed freshness checks. Live SITL subscription remains unverified; no flight command path.
-- **Later:** independent HIL and operator safety review *only if authorized*.
+- **V1 — complete:** accurate scope, offline regression suite and disabled real-vehicle launch.
+- **V2 — complete:** ROS 2 Humble `colcon build`, mock DDS topic communication and safety contract tests.
+- **V3 — complete:** canonical ROS 2 Python packages and malformed/stale mock heartbeat handling.
+- **V4 — implemented:** opt-in read-only PX4 telemetry adapter; **actual PX4 SITL link remains unverified**.
+- **V5 — current:** JSONL evidence recorder, deterministic offline analyzer and synthetic DDS pipeline test. Live SITL experiments **not run**.
+- **Future:** reproducible PX4 Gazebo + XRCE-DDS + matching `px4_msgs` experiment, measured dropout/recovery and independently reviewed logs.
 
 ## Project history and attribution
 
