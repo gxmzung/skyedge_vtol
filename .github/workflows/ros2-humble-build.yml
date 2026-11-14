@@ -33,6 +33,10 @@ jobs:
           ros2 pkg executables vtol_core
           ros2 pkg executables vtol_vision
           test -f install/vtol_core/share/vtol_core/launch/sim_launch.py
+          test -f src/vtol_core/setup.py
+          test -f src/vtol_vision/setup.py
+          test ! -e src/vtol_core/mission_manager_node.py
+          test ! -e src/vtol_vision/aruco_detector_node.py
       - name: Verify ROS launch file import
         shell: bash
         run: |
@@ -51,3 +55,4 @@ jobs:
           export ROS_DOMAIN_ID=128
           export ROS_LOCALHOST_ONLY=1
           timeout 30s python3 tests/ros2_runtime_smoke.py
+          timeout 30s python3 tests/ros2_safety_smoke.py

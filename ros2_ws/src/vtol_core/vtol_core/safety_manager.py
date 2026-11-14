@@ -22,8 +22,17 @@ class SafetyManager(Node):
         self.get_logger().info('Safety manager started')
 
     def on_bridge(self, msg: String) -> None:
-        _ = json.loads(msg.data)
-        self.last_bridge_time = time.time()
+        try:
+            payload = json.loads(msg.data)
+        except (TypeError, ValueError):
+            self.get_logger().warning("ignoring malformed mock bridge heartbeat")
+            return
+        if (not isinstance(payload, dict)
+                or payload.get("simulated") is not True
+                or payload.get("connected") is not False):
+            self.get_logger().warning("ignoring untrusted bridge status")
+            return
+        self.last_bridge_time = time.monotonic()
 
     def on_state(self, msg: String) -> None:
         self.last_state = msg.data
@@ -32,8 +41,8 @@ class SafetyManager(Node):
         if self.last_bridge_time == 0.0:
             return
 
-        if time.time() - self.last_bridge_time > 3.0:
-            self.get_logger().warning('bridge timeout detected, sending failsafe command')
+        if time.monotonic() - self.last_bridge_time > 3.0:
+            self.get_logger().warning('mock bridge timeout detected; publishing non-arming alert')
             msg = String()
             msg.data = json.dumps({'arm': False, 'offboard': False, 'action': 'safety_alert', 'reason': 'bridge_timeout', 'simulated': True})
             self.command_pub.publish(msg)
