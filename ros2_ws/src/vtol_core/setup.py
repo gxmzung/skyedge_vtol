@@ -27,6 +27,7 @@ setup(
             'mission_manager_node = vtol_core.mission_manager_node:main',
             'guidance_node = vtol_core.guidance_node:main',
             'safety_manager = vtol_core.safety_manager:main',
+            'sitl_telemetry_observer = vtol_core.sitl_telemetry_node:main',
         ],
     },
 )
