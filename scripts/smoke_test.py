@@ -1,5 +1,5 @@
 """
-SkyEdge VTOL smoke test.
+VTOL Mission Systems smoke test.
 
 This script checks that core mission-stack modules can be imported
 and that a minimal mission/failsafe scenario runs without crashing.
@@ -82,7 +82,7 @@ def main():
     test_guidance_distance()
     test_px4_bridge_stub()
 
-    print("SkyEdge VTOL smoke test passed.")
+    print("VTOL Mission Systems smoke test passed.")
 
 
 if __name__ == "__main__":
