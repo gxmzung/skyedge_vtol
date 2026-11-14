@@ -47,9 +47,10 @@ class PX4BridgeNode(Node):
 
     def publish_status(self) -> None:
         payload = {
-            'connected': True,
-            'armed': False if self.latest_command is None else self.latest_command.get('arm', False),
-            'offboard': False if self.latest_command is None else self.latest_command.get('offboard', False),
+            'connected': False,
+            'simulated': True,
+            'armed': False,
+            'offboard': False,
             'latest_setpoint': self.latest_setpoint,
         }
         msg = String()
