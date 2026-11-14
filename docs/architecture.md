@@ -1,6 +1,6 @@
-# SkyEdge VTOL Architecture
+# VTOL Mission Systems Architecture
 
-SkyEdge VTOL is organized as a mission-software stack.
+VTOL Mission Systems is organized as a mission-software stack.
 
 ## Core Flow
 
