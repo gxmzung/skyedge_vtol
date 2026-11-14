@@ -1,5 +1,7 @@
 # V5 — PX4 SITL telemetry evidence capture and analysis
 
+For the recorded local Ubuntu 22.04 / WSL2 prerequisite installation and outstanding checks, see [WSL2 PX4 environment validation (2026-11-14)](WSL2_PX4_ENVIRONMENT_2026-11-14.md).
+
 **Status:** Recorder and replay analyzer implemented. This is **not** a live PX4 SITL verification result. No actual flight, hardware control or SITL log is bundled.
 
 ## Fixed boundary
