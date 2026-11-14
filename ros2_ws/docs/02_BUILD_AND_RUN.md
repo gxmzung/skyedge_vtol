@@ -8,13 +8,13 @@
 
 ## 설치
 ```bash
-cd ~/skyedge_vtol_final
+cd ~/vtol-mission-systems/ros2_ws
 bash scripts/install_ubuntu.sh
 ```
 
 ## 빌드
 ```bash
-cd ~/skyedge_vtol_final
+cd ~/vtol-mission-systems/ros2_ws
 bash scripts/build_workspace.sh
 ```
 
@@ -30,7 +30,7 @@ make px4_sitl gz_standard_vtol
 
 ## ROS 2 실행
 ```bash
-cd ~/skyedge_vtol_final
+cd ~/vtol-mission-systems/ros2_ws
 bash scripts/run_sim.sh
 ```
 
