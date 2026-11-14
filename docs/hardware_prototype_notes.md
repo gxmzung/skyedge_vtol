@@ -1,6 +1,6 @@
 # Hardware Prototype Notes
 
-SkyEdge VTOL includes hardware-adjacent prototype modules for future companion-device and embedded integration.
+VTOL Mission Systems includes hardware-adjacent prototype modules for future companion-device and embedded integration.
 
 ## Prototype Areas
 

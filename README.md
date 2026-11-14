@@ -2,7 +2,7 @@
 
 **ROS 2 / PX4 Mission Software · Telemetry Safety · System Integration · Verification**
 
-[![Python verification](https://github.com/gxmzung/skyedge_vtol/actions/workflows/skyedge-ci.yml/badge.svg)](https://github.com/gxmzung/skyedge_vtol/actions/workflows/skyedge-ci.yml)
+[![Python verification](https://github.com/gxmzung/vtol-mission-systems/actions/workflows/offline-core.yml/badge.svg)](https://github.com/gxmzung/vtol-mission-systems/actions/workflows/offline-core.yml)
 
 > **Status: research prototype.** This repository provides Python mission logic and ROS 2 node scaffolds. The included PX4 bridge is a **stub**, not an authenticated/flight-tested PX4 connection. No physical aircraft should be controlled using these components.
 
@@ -39,13 +39,13 @@ The scripts above exercise pure-Python logic and stubs. They do **not** connect 
 src/vtol/                 # Dependency-free research core
 src/vtol_vision/          # Vision experiment prototypes
 src/hardware_prototypes/  # Optional interface examples
-skyedge_vtol/src/         # Legacy ROS 2 workspace layout; under audit
+ros2_ws/src/             # ROS 2 workspace source packages; runtime verification pending
 scripts/                 # Structure and smoke checks
 tests/                   # Offline unittest safety regression suite
 docs/                    # Verification and migration decisions
 ```
 
-The `skyedge_vtol/` directory is a **legacy path**, retained temporarily to avoid breaking imports, build scripts, and historical references. A future migration will move ROS 2 packages only after build evidence has been collected. That directory name is not the current project brand.
+The former project-branded workspace directory is now `ros2_ws/`. This is a **directory-only migration**, not evidence of ROS 2 build or SITL integration. Existing historical documentation is retained for provenance.
 
 ## Safety boundaries
 
@@ -60,7 +60,7 @@ See [Verification Matrix](docs/VERIFICATION_MATRIX.md) and [Migration Plan](docs
 ## Development roadmap
 
 - **V1 (this PR):** honest README, regression tests, fail-closed telemetry checks, disable legacy real launch.
-- **V2:** clean ROS 2 workspace packaging and remove duplicated node sources after integration checks.
+- **V2:** verify `ros2_ws/` package builds and remove duplicated node sources only after ROS 2 integration checks.
 - **V3:** ROS 2/PX4 SITL adapter with explicit message contracts, simulation logs, and CI evidence.
 - **V4:** independent hardware-in-the-loop and operator safety review *only if authorized*.
 

@@ -1,15 +1,15 @@
-# SkyEdge Consolidation Plan
+# VTOL Mission Systems Consolidation Plan
 
-This repository is the canonical SkyEdge VTOL mission stack.
+This repository is the canonical VTOL Mission Systems VTOL mission stack.
 
 ## Consolidation Sources
 
 | Source | Planned Use |
 | --- | --- |
-| skyedge_vtol | Canonical final repository |
-| skyedge-vtol-ws | ROS2/PX4-style workspace code and test ideas |
+| ros2_ws | Canonical final repository |
+| prior team ROS 2 workspace | ROS2/PX4-style workspace code and test ideas |
 | skyedge_mission | hardware prototype notes and ESP32/UDP experiments |
-| SkyEdge-VTOL-System | project narrative and competition documentation |
+| VTOL Mission Systems-VTOL-System | project narrative and competition documentation |
 | test_vtol_yejun | archive only, generated build artifacts excluded |
 
 ## Rules

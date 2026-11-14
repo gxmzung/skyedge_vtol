@@ -1,5 +1,5 @@
 """
-SkyEdge repository structure check.
+VTOL Mission Systems repository structure check.
 
 This script checks whether important folders and files exist.
 It is intended for CI and repository maintenance.
@@ -42,7 +42,7 @@ def main():
 
         raise SystemExit(1)
 
-    print("SkyEdge structure check passed.")
+    print("VTOL Mission Systems structure check passed.")
 
 
 if __name__ == "__main__":

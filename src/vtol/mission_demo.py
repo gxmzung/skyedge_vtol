@@ -15,7 +15,7 @@ def main():
         TelemetryHealth(22, 55, 9, 66, 30),
     ]
 
-    print("SkyEdge VTOL mission demo started")
+    print("VTOL Mission Systems mission demo started")
 
     for health in timeline:
         print(f"STATE: {mission.state.value}")

@@ -45,7 +45,7 @@ chmod +x QGroundControl.AppImage
 
 ## 6. 이 프로젝트 빌드
 ```bash
-cd ~/skyedge_vtol_final
+cd ~/vtol-mission-systems/ros2_ws
 bash scripts/build_workspace.sh
 ```
 
@@ -58,7 +58,7 @@ make px4_sitl gz_standard_vtol
 ## 8. ROS 2 실행
 다른 터미널:
 ```bash
-cd ~/skyedge_vtol_final
+cd ~/vtol-mission-systems/ros2_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 bash scripts/run_sim.sh
