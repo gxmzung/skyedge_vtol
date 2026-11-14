@@ -1,361 +1,73 @@
-﻿<!-- PORTFOLIO-HEADER:START -->
+# VTOL Mission Systems
 
-# skyedge_vtol
+**ROS 2 / PX4 Mission Software · Telemetry Safety · System Integration · Verification**
 
-> ROS2/PX4 VTOL mission stack with telemetry safety, vision assist, failsafe logic, simulation, and CI.
+[![Python verification](https://github.com/gxmzung/skyedge_vtol/actions/workflows/skyedge-ci.yml/badge.svg)](https://github.com/gxmzung/skyedge_vtol/actions/workflows/skyedge-ci.yml)
 
-**Domain:** UAV · ROS2 · PX4 · Autonomous Mission Systems  
-**Role:** Mission Software · System Integration  
-**Status:** Prototype / Competition Project
+> **Status: research prototype.** This repository provides Python mission logic and ROS 2 node scaffolds. The included PX4 bridge is a **stub**, not an authenticated/flight-tested PX4 connection. No physical aircraft should be controlled using these components.
 
-## Portfolio Summary
+## Goal
 
-### System Focus
+Build a reproducible, simulation-first portfolio around mission-state transitions, telemetry-based safety decisions, guidance calculations, and ROS 2 interface design. Every claimed capability has an explicit verification level.
 
-- ROS2 / PX4 mission integration
-- telemetry health and safety monitoring
-- autonomous mission-state transitions
-- vision-assisted mission logic
-- failsafe / fallback handling
-- SITL-oriented verification and CI
+| Capability | Existing implementation | Verified here |
+| --- | --- | --- |
+| Mission state machine | Python state transitions and FAILSAFE terminal state | Unit and smoke tests |
+| Telemetry safety | Battery, signal, GNSS, temperature, altitude thresholds | Unit tests, boundary and invalid numeric inputs |
+| Guidance | 3D waypoint distance and threshold checks | Unit tests |
+| PX4 interface | Local in-memory bridge stub and ROS 2 message scaffold | Stub behavior only; **not** real PX4 |
+| Vision | ArUco / line-tracking prototypes | Code present; integration not established |
+| ROS 2 | Node, setup and launch scaffolds | Code review only; ROS 2 runtime CI is a separate milestone |
+| Real aircraft | Not implemented or validated | **Unsupported / blocked** |
 
-### Engineering Boundary
+## Quick start — dependency-free core tests
 
-> Simulation, software verification, and real-flight verification are documented separately. Implemented software is not presented as hardware-verified unless field testing has been completed.
+Python 3.11+:
 
----
+```bash
+python -m unittest discover -s tests -v
+python scripts/check_structure.py
+python scripts/smoke_test.py
+python src/vtol/mission_demo.py
+```
 
-<!-- PORTFOLIO-HEADER:END -->
+The scripts above exercise pure-Python logic and stubs. They do **not** connect to PX4, ROS 2, SITL, a vehicle, or hardware.
 
-# SkyEdge VTOL Mission Stack
-
-![SkyEdge CI](https://github.com/gxmzung/skyedge_vtol/actions/workflows/skyedge-ci.yml/badge.svg)
-
-SkyEdge VTOL Mission Stack is a ROS 2 / PX4-based VTOL mission software prototype.
-
-# SkyEdge VTOL
-
-ROS2/PX4-oriented VTOL mission stack with telemetry safety, guidance, vision assist, hardware prototypes, smoke tests, and CI.
-
-## Overview
-
-SkyEdge VTOL is a UAV mission software project focused on autonomous flight workflow, telemetry safety, mission flow, and ROS2/PX4-based system integration.
-
-This project is connected to the KRAC 24th Robot Aircraft Competition.
-
-## Mission
-
-Build and understand a VTOL mission system that connects:
-
-* Flight control
-* Mission planning
-* Telemetry monitoring
-* Vision-assisted detection
-* Safety and failsafe logic
-* Ground control workflow
-
-## System Concept
-
-The system is designed around the following structure:
-
-1. Mission Planning
-2. ROS2 Node Control
-3. PX4 Offboard Control
-4. Telemetry Monitoring
-5. Vision Assist
-6. Failsafe Transition
-7. Flight Log Review
-
-## Key Technologies
-
-* ROS2
-* PX4
-* Python
-* Telemetry
-* Mission Flow
-* ArUco / Vision Assist
-* UAV Simulation
-* Safety Check
-
-## My Focus
-
-I focus on understanding the software side of UAV systems:
-
-* Mission flow documentation
-* PX4/ROS2 structure
-* Telemetry safety logic
-* Flight state transition
-* System-level explanation
-
-## Roadmap
-
-### v0.1
-
-* Mission flow documentation
-* PX4/ROS2 structure study
-
-### v0.5
-
-* Telemetry safety check
-* Simulated mission flow
-
-### v1.0
-
-* Integrated mission workflow
-* Vision assist module
-* Flight test preparation
-
-
----
-
-## Why This Project Exists
-
-PX4 provides a reliable flight-control foundation, but a real mission system needs more than basic flight control.
-
-This project explores the software layer needed around a VTOL platform:
-
-- mission state transitions
-- PX4 bridge / command interface
-- safety fallback logic
-- guidance logic
-- vision-assisted detection
-- simulation and real-flight launch separation
-- parameter-based configuration
-
-The goal is to reduce software uncertainty before connecting to real hardware.
-
----
-
-## Core Principle
+## Repository layout
 
 ```text
-PX4 handles low-level flight control.
-SkyEdge handles mission logic, safety decisions, guidance, and vision-side software.
+src/vtol/                 # Dependency-free research core
+src/vtol_vision/          # Vision experiment prototypes
+src/hardware_prototypes/  # Optional interface examples
+skyedge_vtol/src/         # Legacy ROS 2 workspace layout; under audit
+scripts/                 # Structure and smoke checks
+tests/                   # Offline unittest safety regression suite
+docs/                    # Verification and migration decisions
 ```
 
-This repository treats simulation success as an intermediate checkpoint, not as final validation.
+The `skyedge_vtol/` directory is a **legacy path**, retained temporarily to avoid breaking imports, build scripts, and historical references. A future migration will move ROS 2 packages only after build evidence has been collected. That directory name is not the current project brand.
 
----
+## Safety boundaries
 
-## Main Components
+1. **Simulated != PX4-connected != flight-tested.**
+2. The existing ROS 2 bridge publishes mock status and is not an independent source of vehicle arming truth.
+3. Invalid or non-finite telemetry readings are treated as unsafe in the dependency-free safety model.
+4. Real-aircraft launch is disabled until there is a separately reviewed vehicle adapter, an independent operator-controlled safety path, and documented tests.
+5. Do not use this research code to fly or control a physical aircraft.
 
-```text
-skyedge_vtol/
-├─ README.md
-├─ docs/
-│  └─ README.md
-├─ src/
-│  ├─ vtol_core/
-│  │  ├─ mission_manager_node.py
-│  │  ├─ px4_bridge_node.py
-│  │  ├─ safety_manager.py
-│  │  ├─ guidance_node.py
-│  │  ├─ messages.py
-│  │  ├─ state_defs.py
-│  │  ├─ config/global_params.yaml
-│  │  └─ launch/
-│  │     ├─ sim_launch.py
-│  │     └─ real_launch.py
-│  │
-│  └─ vtol_vision/
-│     ├─ aruco_detector_node.py
-│     └─ line_tracker_node.py
-```
+See [Verification Matrix](docs/VERIFICATION_MATRIX.md) and [Migration Plan](docs/REFACTOR_PLAN.md).
 
----
+## Development roadmap
 
-## Key Modules
+- **V1 (this PR):** honest README, regression tests, fail-closed telemetry checks, disable legacy real launch.
+- **V2:** clean ROS 2 workspace packaging and remove duplicated node sources after integration checks.
+- **V3:** ROS 2/PX4 SITL adapter with explicit message contracts, simulation logs, and CI evidence.
+- **V4:** independent hardware-in-the-loop and operator safety review *only if authorized*.
 
-### `vtol_core`
+## Project history and attribution
 
-Mission and control-side logic.
+This repository evolved from an earlier VTOL competition/team project. Renaming the current portfolio **does not erase prior authorship, team involvement, or commit history**. Historical team documents and directories are retained until their provenance and reuse rights have been reviewed. This repository does not claim that all historical work was created solely by the current maintainer.
 
-- `mission_manager_node.py`  
-  Manages mission state transitions and high-level mission flow.
+## Maintainer
 
-- `px4_bridge_node.py`  
-  Provides a bridge layer between mission logic and PX4-side commands or telemetry.
-
-- `safety_manager.py`  
-  Handles safety-state checks, fallback logic, and abnormal-condition handling.
-
-- `guidance_node.py`  
-  Contains guidance logic for mission execution.
-
-- `state_defs.py`  
-  Defines mission states and internal state representation.
-
-- `messages.py`  
-  Defines internal message/data structures used by the mission stack.
-
-- `config/global_params.yaml`  
-  Central configuration file for mission parameters.
-
-### `vtol_vision`
-
-Vision-side support nodes.
-
-- `aruco_detector_node.py`  
-  Prototype node for marker-based detection.
-
-- `line_tracker_node.py`  
-  Prototype node for line-tracking or visual guidance support.
-
----
-
-## Launch Structure
-
-The repository separates simulation and real-flight entry points.
-
-```text
-src/vtol_core/launch/sim_launch.py
-src/vtol_core/launch/real_launch.py
-```
-
-This separation is important because simulation and real hardware should not share the same assumptions.
-
----
-
-## Suggested Workflow
-
-### 1. Review parameters
-
-```bash
-cat skyedge_vtol/src/vtol_core/config/global_params.yaml
-```
-
-### 2. Review mission core
-
-```bash
-ls skyedge_vtol/src/vtol_core
-```
-
-### 3. Review vision nodes
-
-```bash
-ls skyedge_vtol/src/vtol_vision
-```
-
-### 4. Run inside a ROS 2 workspace
-
-This repository is intended to be placed inside a ROS 2 workspace structure.
-
-Example:
-
-```bash
-mkdir -p ~/skyedge_ws/src
-cd ~/skyedge_ws/src
-git clone https://github.com/gxmzung/skyedge_vtol.git
-cd ~/skyedge_ws
-colcon build
-source install/setup.bash
-```
-
-Then launch simulation-side logic after connecting the required PX4 / simulator environment.
-
-```bash
-ros2 launch vtol_core sim_launch.py
-```
-
-For real hardware integration, use the real launch entry only after configuration and safety checks.
-
-```bash
-ros2 launch vtol_core real_launch.py
-```
-
----
-
-## Tech Stack
-
-- ROS 2 Humble
-- PX4
-- Python
-- YAML configuration
-- VTOL mission logic
-- ArUco marker detection prototype
-- Line tracking prototype
-- Simulation-first validation workflow
-
----
-
-## Current Status
-
-This repository is a mission-stack prototype.
-
-Implemented or scaffolded:
-
-- mission manager node
-- PX4 bridge node
-- safety manager
-- guidance node
-- mission state definitions
-- global parameter file
-- simulation launch entry
-- real launch entry
-- ArUco detector node
-- line tracker node
-
-Not yet claimed:
-
-- flight-certified safety
-- real aircraft validation
-- complete PX4 integration
-- production deployment
-- autonomous operation approval
-
----
-
----
-
-## Validation
-
-This repository includes lightweight validation scripts.
-
-| Script | Role |
-| --- | --- |
-| `scripts/check_structure.py` | Checks required repository structure |
-| `scripts/smoke_test.py` | Runs minimal mission-stack smoke tests |
-| `.github/workflows/skyedge-ci.yml` | Runs checks through GitHub Actions |
-
-The current validation target is not flight certification.  
-It is repository-level sanity checking for mission software architecture.
-
----
-
-## Engineering Notes
-
-This project intentionally separates:
-
-```text
-flight control     -> PX4
-mission logic      -> vtol_core
-vision support     -> vtol_vision
-configuration      -> YAML
-simulation launch  -> sim_launch.py
-real launch        -> real_launch.py
-```
-
-This structure makes it easier to reason about responsibility boundaries before hardware integration.
-
----
-
-## Future Work
-
-- Add simulation screenshots
-- Add rqt_graph capture
-- Add PX4 SITL connection guide
-- Add QGroundControl workflow notes
-- Add unit tests for mission state transitions
-- Add safety scenario test cases
-- Add a sample mission timeline
-- Document real hardware connection assumptions
-
----
-
-## Honest Limits
-
-This project is not a finished VTOL autopilot.
-
-It is a software-side mission stack prototype designed to show how PX4, ROS 2, mission management, safety handling, and vision nodes can be organized before moving toward real hardware integration.
-
-
+[Youngjun Lee](https://github.com/gxmzung) · [LinkedIn](https://www.linkedin.com/in/youngjoon-gamjeong/)
