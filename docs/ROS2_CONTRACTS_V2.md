@@ -42,3 +42,11 @@ For validation without ROS 2, run `python -m unittest discover -s tests -v` at t
 2. ROS 2 Humble system OpenCV may not support `cv2.aruco.ArucoDetector`. A runtime camera replay/integration test is required.
 3. A `colcon build` only proves packaging, not ROS communication, functioning vision, PX4 SITL, or flight safety.
 4. SITL adapter must explicitly verify timestamps, QoS, frame conventions, heartbeat freshness and offboard ack; no automatic hardware control path is included.
+
+## ROS 2 actual topic-smoke gate (added)
+
+`ros2_ws/tests/ros2_runtime_smoke.py` runs **real `rclpy` nodes in one executor** after the Humble `colcon build`. It observes DDS traffic on `/px4_bridge/status` and `/mission/state`, verifies that the mock bridge remains disconnected, and rejects unexpected `/mission/command` messages. The CI job uses a local-only isolated ROS domain.
+
+The independent `safety_manager` was also changed so stale mock status emits `safety_alert` with `arm:false`; it never emits an unverified `failsafe_land` command.
+
+**Interpretation:** Passing this test will demonstrate basic in-process ROS 2 publisher/subscriber messaging, not separate-process network resilience, camera processing, PX4 SITL, or real-flight operation. Verify the current GitHub Actions conclusion before claiming the topic smoke passed.
