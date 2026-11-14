@@ -1,6 +1,6 @@
-# SkyEdge VTOL Mission Stack
+# VTOL Mission Systems — ROS 2 Workspace (Research)
 
-PX4 + ROS 2 Humble 기반 VTOL 구조 임무용 소프트웨어 프로젝트입니다.
+PX4 + ROS 2 Humble 기반 VTOL 연구용 패키지 소스입니다. **실제 PX4 연동·SITL·실기체 동작은 아직 검증되지 않았습니다.**
 
 ## 문서 구조
 - `README.md` : 상위 레포 설명
@@ -20,9 +20,13 @@ PX4 + ROS 2 Humble 기반 VTOL 구조 임무용 소프트웨어 프로젝트입�
 - 시뮬 성공만으로 완료 판정하지 않는다.
 - 실기체 연결 전까지 소프트웨어 불확실성을 최대한 제거한다.
 
+## 연구용 빌드 절차 (ROS 2 환경 별도 필요)
+
+현재 package 구조 및 setup entrypoint 정상성을 검사해야 하므로 빌드 결과를 성공으로 가정하지 않습니다.
+
 ## 빠른 시작
 ```bash
-cd ~/skyedge_vtol_final
+cd ~/vtol-mission-systems/ros2_ws
 bash scripts/install_ubuntu.sh
 bash scripts/build_workspace.sh
 ```
@@ -35,6 +39,6 @@ make px4_sitl gz_standard_vtol
 
 ROS 2 실행:
 ```bash
-cd ~/skyedge_vtol_final
+cd ~/vtol-mission-systems/ros2_ws
 bash scripts/run_sim.sh
 ```
