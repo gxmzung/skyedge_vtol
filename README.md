@@ -17,7 +17,7 @@ Build a reproducible, simulation-first portfolio around mission-state transition
 | Guidance | 3D waypoint distance and threshold checks | Unit tests |
 | PX4 interface | Local in-memory bridge stub and ROS 2 message scaffold | Stub behavior only; **not** real PX4 |
 | Vision | ArUco / line-tracking prototypes | Code present; integration not established |
-| ROS 2 | Node, setup and launch scaffolds | Code review only; ROS 2 runtime CI is a separate milestone |
+| ROS 2 | Packaged Humble nodes, ROS topic mock bridge and safety guard | `colcon build` + basic DDS runtime topic smoke CI; not PX4 SITL |
 | Real aircraft | Not implemented or validated | **Unsupported / blocked** |
 
 ## Quick start — dependency-free core tests
@@ -39,7 +39,7 @@ The scripts above exercise pure-Python logic and stubs. They do **not** connect 
 src/vtol/                 # Dependency-free research core
 src/vtol_vision/          # Vision experiment prototypes
 src/hardware_prototypes/  # Optional interface examples
-ros2_ws/src/             # ROS 2 workspace source packages; runtime verification pending
+ros2_ws/src/             # ROS 2 Humble installable packages; mock DDS checks
 scripts/                 # Structure and smoke checks
 tests/                   # Offline unittest safety regression suite
 docs/                    # Verification and migration decisions
@@ -55,12 +55,13 @@ The former project-branded workspace directory is now `ros2_ws/`. This is a **di
 4. Real-aircraft launch is disabled until there is a separately reviewed vehicle adapter, an independent operator-controlled safety path, and documented tests.
 5. Do not use this research code to fly or control a physical aircraft.
 
-See [Verification Matrix](docs/VERIFICATION_MATRIX.md) and [Migration Plan](docs/REFACTOR_PLAN.md).
+See [Verification Matrix](docs/VERIFICATION_MATRIX.md), [ROS 2 Topic Contracts](docs/ROS2_CONTRACTS_V2.md), and [Migration Plan](docs/REFACTOR_PLAN.md).
 
 ## Development roadmap
 
 - **V1 (this PR):** honest README, regression tests, fail-closed telemetry checks, disable legacy real launch.
-- **V2:** verify `ros2_ws/` package builds and remove duplicated node sources only after ROS 2 integration checks.
+- **V2 (verified):** ROS 2 Humble `colcon build` and mock DDS topic communication checks.
+- **V3 (PR pending):** remove shadow duplicate node files and test stale heartbeat alert over ROS 2 topics.
 - **V3:** ROS 2/PX4 SITL adapter with explicit message contracts, simulation logs, and CI evidence.
 - **V4:** independent hardware-in-the-loop and operator safety review *only if authorized*.
 
