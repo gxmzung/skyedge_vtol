@@ -1,24 +1,24 @@
-name: SkyEdge CI
+name: VTOL Mission Systems — Offline Verification
 
 on:
   push:
   pull_request:
 
 jobs:
-  smoke-test:
+  offline-core:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Check repository structure
         run: python scripts/check_structure.py
-
-      - name: Run smoke test
+      - name: Core unit regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Smoke test
         run: python scripts/smoke_test.py
+      - name: Offline mission demo
+        run: python src/vtol/mission_demo.py
