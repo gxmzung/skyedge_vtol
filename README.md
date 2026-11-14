@@ -6,6 +6,20 @@
 
 > **Status: research prototype.** This repository provides Python mission logic and ROS 2 node scaffolds. The included PX4 bridge is a **stub**, not an authenticated/flight-tested PX4 connection. No physical aircraft should be controlled using these components.
 
+## 외부 개발자용 빠른 재현
+
+Python 3.11+로 클론한 저장소의 루트에서 다음 한 줄을 실행하세요.
+
+```bash
+python scripts/verify_offline.py
+```
+
+필수 구조 확인 → unittest → 스모크 테스트 → 오프라인 데모 순서로 실행하며 첫 실패에서 중단합니다. [재현성·증빙 기준](docs/OFFLINE_REPRODUCIBILITY.md) 및 [오프라인 CI](https://github.com/gxmzung/vtol-mission-systems/actions/workflows/offline-core.yml)를 참고하세요.
+
+**검증 경계:** 이 경로는 순수 Python core와 PX4 브리지 *stub*만 시험합니다. ROS 2 Humble 빌드는 별도 CI이며, 실제 PX4 SITL·DDS 연결·비행 검증으로 대체할 수 없습니다. [SITL 증빙 프로토콜](docs/PX4_SITL_V5_EVIDENCE.md)을 참고하세요.
+
+**프로젝트 구분:** 이 저장소는 ROS 2 텔레메트리 관측·검증 증빙에 초점을 두며, [VTOL Autonomy Lab](https://github.com/gxmzung/vtol-autonomy-lab)은 MAVSDK/가상 FC 기반 자율임무 및 고장 대응 로직에 초점을 둡니다.
+
 ## Goal
 
 Build a reproducible, simulation-first portfolio around mission-state transitions, telemetry-based safety decisions, guidance calculations, and ROS 2 interface design. Every claimed capability has an explicit verification level.
