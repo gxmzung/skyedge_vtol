@@ -59,6 +59,7 @@ jobs:
           export ROS_LOCALHOST_ONLY=1
           timeout 30s python3 tests/ros2_runtime_smoke.py
           timeout 30s python3 tests/ros2_safety_smoke.py
+          timeout 30s python3 tests/ros2_evidence_smoke.py
       - name: Validate V4 observer is importable without PX4 interfaces
         shell: bash
         run: |
