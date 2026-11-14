@@ -32,6 +32,8 @@ jobs:
           source install/setup.bash
           ros2 pkg executables vtol_core | tee /tmp/vtol-core-executables.txt
           grep -q 'sitl_telemetry_observer' /tmp/vtol-core-executables.txt
+          grep -q 'sitl_evidence_recorder' /tmp/vtol-core-executables.txt
+          grep -q 'sitl_evidence_report' /tmp/vtol-core-executables.txt
           ros2 pkg executables vtol_vision
           test -f install/vtol_core/share/vtol_core/launch/sim_launch.py
           test -f src/vtol_core/setup.py
@@ -65,3 +67,11 @@ jobs:
           cd ros2_ws
           source install/setup.bash
           python3 -c 'from vtol_core.sitl_telemetry_node import SITLTelemetryObserverNode; from vtol_core.sitl_telemetry import SITLTelemetryMonitor; assert not SITLTelemetryMonitor().snapshot()["actuation_authorized"]'
+      - name: V5 recorder and evidence reporter import
+        shell: bash
+        run: |
+          set -eo pipefail
+          source /opt/ros/humble/setup.bash
+          cd ros2_ws
+          source install/setup.bash
+          python3 -c 'from vtol_core.sitl_evidence import summarize; from vtol_core.sitl_evidence_recorder import EvidenceRecorder; assert callable(summarize); assert EvidenceRecorder is not None'
