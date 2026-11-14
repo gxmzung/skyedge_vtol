@@ -28,6 +28,8 @@ setup(
             'guidance_node = vtol_core.guidance_node:main',
             'safety_manager = vtol_core.safety_manager:main',
             'sitl_telemetry_observer = vtol_core.sitl_telemetry_node:main',
+            'sitl_evidence_recorder = vtol_core.sitl_evidence_recorder:main',
+            'sitl_evidence_report = vtol_core.sitl_evidence:main',
         ],
     },
 )
