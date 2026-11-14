@@ -1,6 +1,6 @@
 # Vision Module Design
 
-SkyEdge VTOL includes a vision-assisted mission layer.
+VTOL Mission Systems includes a vision-assisted mission layer.
 
 The vision module is designed to provide advisory information to the mission stack.
 
