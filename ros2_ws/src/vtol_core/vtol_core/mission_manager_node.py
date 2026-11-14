@@ -5,6 +5,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 
 from .state_defs import MissionState
+from .contracts import parse_detection, parse_status
 
 
 class MissionManagerNode(Node):
@@ -28,16 +29,13 @@ class MissionManagerNode(Node):
         self.get_logger().info('Mission manager node started')
 
     def on_line(self, msg: String) -> None:
-        data = json.loads(msg.data)
-        self.line_found = bool(data.get('found', False))
+        self.line_found = parse_detection(msg.data)
 
     def on_marker(self, msg: String) -> None:
-        data = json.loads(msg.data)
-        self.marker_found = bool(data.get('found', False))
+        self.marker_found = parse_detection(msg.data)
 
     def on_bridge_status(self, msg: String) -> None:
-        data = json.loads(msg.data)
-        self.bridge_connected = bool(data.get('connected', False))
+        self.bridge_connected = parse_status(msg.data)['connected']
 
     def publish_state(self) -> None:
         msg = String()

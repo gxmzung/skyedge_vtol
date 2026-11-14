@@ -35,7 +35,7 @@ class SafetyManager(Node):
         if time.time() - self.last_bridge_time > 3.0:
             self.get_logger().warning('bridge timeout detected, sending failsafe command')
             msg = String()
-            msg.data = json.dumps({'arm': True, 'offboard': False, 'action': 'failsafe_land'})
+            msg.data = json.dumps({'arm': False, 'offboard': False, 'action': 'safety_alert', 'reason': 'bridge_timeout', 'simulated': True})
             self.command_pub.publish(msg)
 
 

@@ -1,0 +1,53 @@
+name: ROS 2 Humble Workspace Build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ros2-packages:
+    runs-on: ubuntu-22.04
+    container:
+      image: ros:humble-ros-base
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y python3-colcon-common-extensions python3-rosdep python3-opencv ros-humble-cv-bridge ros-humble-sensor-msgs ros-humble-geometry-msgs
+          rosdep update
+      - name: Resolve ROS dependencies
+        run: |
+          . /opt/ros/humble/setup.sh
+          cd ros2_ws
+          rosdep install --from-paths src --ignore-src -r -y
+      - name: Build and inspect ROS packages
+        shell: bash
+        run: |
+          set -eo pipefail
+          source /opt/ros/humble/setup.bash
+          cd ros2_ws
+          colcon build --symlink-install --event-handlers console_direct+ --executor sequential
+          source install/setup.bash
+          ros2 pkg executables vtol_core
+          ros2 pkg executables vtol_vision
+          test -f install/vtol_core/share/vtol_core/launch/sim_launch.py
+      - name: Verify ROS launch file import
+        shell: bash
+        run: |
+          set -eo pipefail
+          source /opt/ros/humble/setup.bash
+          cd ros2_ws
+          source install/setup.bash
+          python3 -c "from launch import LaunchDescription; from vtol_core.contracts import parse_status; assert not parse_status('{\"connected\":true}')['connected']"
+      - name: ROS 2 in-process topic communication smoke
+        shell: bash
+        run: |
+          set -eo pipefail
+          source /opt/ros/humble/setup.bash
+          cd ros2_ws
+          source install/setup.bash
+          export ROS_DOMAIN_ID=128
+          export ROS_LOCALHOST_ONLY=1
+          timeout 30s python3 tests/ros2_runtime_smoke.py

@@ -2,8 +2,8 @@
 <package format="3">
   <name>vtol_core</name>
   <version>0.1.0</version>
-  <description>VTOL mission core for competition</description>
-  <maintainer email="team@example.com">SkyEdge Team</maintainer>
+  <description>VTOL mission research and simulated interface nodes</description>
+  <maintainer email="noreply@users.noreply.github.com">VTOL Mission Systems contributors</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_python</buildtool_depend>
