@@ -20,6 +20,7 @@ def summarize(records):
     stale_windows = 0
     recovered = 0
     previously_fresh = None
+    in_dropout = False
     rows = 0
     durations = []
     for record in records:
@@ -54,8 +55,10 @@ def summarize(records):
             raise ValueError("inconsistent freshness indicator")
         if previously_fresh is True and not fresh:
             stale_windows += 1
-        if previously_fresh is False and fresh:
+            in_dropout = True
+        if in_dropout and fresh:
             recovered += 1
+            in_dropout = False
         previously_fresh = fresh
         rows += 1
 
