@@ -20,7 +20,7 @@ jobs:
       - name: Capture reproducibility metadata
         run: |
           mkdir -p evidence
-          printf 'repository=%s\ncommit=%s\nrun_id=%s\nrunner=%s\n' "$GITHUB_REPOSITORY" "$GITHUB_SHA" "$GITHUB_RUN_ID" "$RUNNER_OS" > evidence/metadata.txt
+          printf 'repository=%s\ncheckout_sha=%s\nevent_sha=%s\npr_head_sha=%s\nrun_id=%s\nrunner=%s\n' "$GITHUB_REPOSITORY" "$(git rev-parse HEAD)" "$GITHUB_SHA" "${{ github.event.pull_request.head.sha || github.sha }}" "$GITHUB_RUN_ID" "$RUNNER_OS" > evidence/metadata.txt
           python --version >> evidence/metadata.txt 2>&1
       - name: Offline structure, unit, smoke and demo evidence gate
         run: |
