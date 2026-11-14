@@ -26,7 +26,15 @@ def main():
     executor.add_node(safety)
     executor.add_node(observer)
     try:
-        safety.last_bridge_time = time.time() - 10.0
+        bad = String()
+        bad.data = "{not-json"
+        safety.on_bridge(bad)
+        assert safety.last_bridge_time == 0.0, "malformed mock status updated heartbeat"
+        forged = String()
+        forged.data = '{"connected": true, "simulated": false}'
+        safety.on_bridge(forged)
+        assert safety.last_bridge_time == 0.0, "forged PX4 connected status was accepted"
+        safety.last_bridge_time = time.monotonic() - 10.0
         deadline = time.monotonic() + 5.0
         while not observed and time.monotonic() < deadline:
             executor.spin_once(timeout_sec=0.2)
