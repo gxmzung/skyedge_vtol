@@ -1,6 +1,6 @@
-# SkyEdge Test Strategy
+# VTOL Mission Systems Test Strategy
 
-SkyEdge uses lightweight validation before full ROS2/PX4 integration.
+VTOL Mission Systems uses lightweight validation before full ROS2/PX4 integration.
 
 ## Current Test Layers
 
