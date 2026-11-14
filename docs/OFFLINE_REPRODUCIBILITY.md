@@ -17,7 +17,7 @@ python scripts/verify_offline.py
 | structure | `scripts/check_structure.py` | 필수 파일 존재 |
 | core-tests | `unittest discover -s tests -v` | 상태·텔레메트리·Failsafe 회귀 |
 | smoke | `scripts/smoke_test.py` | 최소 모의 임무 |
-| demo | `src/vtol/mission_demo.py` | 오프라인 예제 실행 |
+| demo | `src/vtol/mission_demo.py` | 종료 코드 0 **및** `FAILSAFE: LOW_BATTERY`, `FINAL STATE: FAILSAFE` 출력 확인 |
 
 ## 보고 시 최소 증빙
 - 저장소 SHA: `git rev-parse HEAD`
@@ -28,3 +28,6 @@ python scripts/verify_offline.py
 
 ## 주의
 이 스크립트는 기존 CI 명령을 하나의 진입점으로 묶었습니다. 코드 동작을 개선했다거나 SITL 테스트를 새로 수행했다는 주장이 아닙니다. 실제 SITL 증거 확보는 [V5 증빙 프로토콜](PX4_SITL_V5_EVIDENCE.md)에 따라 버전 SHA, DDS 샘플, 원시 로그, 드롭아웃/복구 기록을 따로 수집해야 합니다.
+
+## 데모 결과 검증
+검증 스크립트는 오프라인 데모가 단순히 종료 코드 0으로 끝나는 것에 만족하지 않습니다. 결과 출력에서 `FAILSAFE: LOW_BATTERY`와 `FINAL STATE: FAILSAFE`를 **완전한 줄 단위로** 확인하고, 하나라도 빠지면 실패로 처리합니다. `tests/test_offline_gate.py`는 잘못된 정상 종료·실패 사유·부분 문자열 오탐을 검증합니다. 이 기준은 현재 제공된 결정론적 모의 입력에만 적용합니다.
