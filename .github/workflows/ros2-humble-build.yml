@@ -30,7 +30,8 @@ jobs:
           cd ros2_ws
           colcon build --symlink-install --event-handlers console_direct+ --executor sequential
           source install/setup.bash
-          ros2 pkg executables vtol_core
+          ros2 pkg executables vtol_core | tee /tmp/vtol-core-executables.txt
+          grep -q 'sitl_telemetry_observer' /tmp/vtol-core-executables.txt
           ros2 pkg executables vtol_vision
           test -f install/vtol_core/share/vtol_core/launch/sim_launch.py
           test -f src/vtol_core/setup.py
@@ -56,3 +57,11 @@ jobs:
           export ROS_LOCALHOST_ONLY=1
           timeout 30s python3 tests/ros2_runtime_smoke.py
           timeout 30s python3 tests/ros2_safety_smoke.py
+      - name: Validate V4 observer is importable without PX4 interfaces
+        shell: bash
+        run: |
+          set -eo pipefail
+          source /opt/ros/humble/setup.bash
+          cd ros2_ws
+          source install/setup.bash
+          python3 -c 'from vtol_core.sitl_telemetry_node import SITLTelemetryObserverNode; from vtol_core.sitl_telemetry import SITLTelemetryMonitor; assert not SITLTelemetryMonitor().snapshot()["actuation_authorized"]'

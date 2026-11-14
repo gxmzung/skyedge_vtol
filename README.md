@@ -55,7 +55,7 @@ The former project-branded workspace directory is now `ros2_ws/`. This is a **di
 4. Real-aircraft launch is disabled until there is a separately reviewed vehicle adapter, an independent operator-controlled safety path, and documented tests.
 5. Do not use this research code to fly or control a physical aircraft.
 
-See [Verification Matrix](docs/VERIFICATION_MATRIX.md), [ROS 2 Topic Contracts](docs/ROS2_CONTRACTS_V2.md), and [Migration Plan](docs/REFACTOR_PLAN.md).
+See [Verification Matrix](docs/VERIFICATION_MATRIX.md), [ROS 2 Topic Contracts](docs/ROS2_CONTRACTS_V2.md), [V4 Read-Only SITL Plan](docs/PX4_SITL_V4.md), and [Migration Plan](docs/REFACTOR_PLAN.md).
 
 ## Development roadmap
 
@@ -63,7 +63,8 @@ See [Verification Matrix](docs/VERIFICATION_MATRIX.md), [ROS 2 Topic Contracts](
 - **V2 (verified):** ROS 2 Humble `colcon build` and mock DDS topic communication checks.
 - **V3 (PR pending):** remove shadow duplicate node files and test stale heartbeat alert over ROS 2 topics.
 - **V3:** ROS 2/PX4 SITL adapter with explicit message contracts, simulation logs, and CI evidence.
-- **V4:** independent hardware-in-the-loop and operator safety review *only if authorized*.
+- **V4 (in PR):** optional read-only PX4 SITL telemetry observer with fail-closed freshness checks. Live SITL subscription remains unverified; no flight command path.
+- **Later:** independent HIL and operator safety review *only if authorized*.
 
 ## Project history and attribution
 
