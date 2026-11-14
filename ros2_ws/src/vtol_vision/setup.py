@@ -12,8 +12,8 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='SkyEdge Team',
-    maintainer_email='team@example.com',
+    maintainer='Original VTOL project contributors',
+    maintainer_email='noreply@users.noreply.github.com',
     description='VTOL vision nodes',
     license='MIT',
     entry_points={
