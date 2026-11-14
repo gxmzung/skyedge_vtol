@@ -3,7 +3,7 @@
   <name>vtol_vision</name>
   <version>0.1.0</version>
   <description>VTOL vision nodes</description>
-  <maintainer email="team@example.com">SkyEdge Team</maintainer>
+  <maintainer email="noreply@users.noreply.github.com">VTOL Mission Systems contributors</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_python</buildtool_depend>
