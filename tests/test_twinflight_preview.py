@@ -5,9 +5,16 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from twinflight_preview import DEFAULT_SCENARIO, preview, read_mission
+try:
+    import yaml  # noqa: F401
+except ImportError:
+    yaml = None
+
+if yaml is not None:
+    from twinflight_preview import DEFAULT_SCENARIO, preview, read_mission
 
 
+@unittest.skipUnless(yaml is not None, "Optional PyYAML not installed; dedicated preview CI tests it")
 class TwinflightPreviewTests(unittest.TestCase):
     def test_original_scenario_preserved(self):
         mission = read_mission(DEFAULT_SCENARIO)
