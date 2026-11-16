@@ -1,0 +1,31 @@
+# Historical educational scenario adapted from gxmzung/twinflight-mission-v2
+# Original: ros2_ws/src/twinflight_mission/config/mission.yaml
+# Simulation/preview only. Does NOT authorize arming or issuing offboard commands.
+mission_name: campus_facility_inspection_demo
+description: "시설 점검용 자율비행 임무 시뮬레이션"
+takeoff_altitude: 5.0
+waypoints:
+  - name: takeoff_hover
+    x: 0.0
+    y: 0.0
+    z: -5.0
+    yaw: 0.0
+    hold_sec: 3
+  - name: inspect_point_1
+    x: 5.0
+    y: 0.0
+    z: -5.0
+    yaw: 0.0
+    hold_sec: 3
+  - name: inspect_point_2
+    x: 5.0
+    y: 5.0
+    z: -5.0
+    yaw: 1.57
+    hold_sec: 3
+  - name: return_point
+    x: 0.0
+    y: 0.0
+    z: -5.0
+    yaw: 3.14
+    hold_sec: 3
