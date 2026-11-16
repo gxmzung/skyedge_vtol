@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>twinflight_mission</name>
+  <version>0.2.0</version>
+  <description>ROS2 PX4 waypoint mission simulator for presentation</description>
+  <maintainer email="example@example.com">TwinFlight Team</maintainer>
+  <license>BSD-3-Clause</license>
+
+  <depend>rclpy</depend>
+  <depend>px4_msgs</depend>
+  <depend>python3-yaml</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
