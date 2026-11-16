@@ -29,3 +29,12 @@
 - 핵심 2개 저장소는 현재 별도 유지.
 - 완전 이관 전 Archive 0개, 영구 삭제 0개.
 - 테스트 통과는 PX4 SITL/실기체 비행 안전성의 증거가 아니다.
+
+## TwinFlight 원본 보존 보완 — 2026-11-16
+
+- 원본 `twinflight-mission-v2/main`의 Git 추적 파일 **22개 전체**를 `examples/twinflight/original/`로 byte-for-byte 복제했다.
+- `examples/twinflight/SOURCE_SHA1_MANIFEST.txt`에 각 원본 Git blob SHA-1을 보관하고, `tests/test_twinflight_source_integrity.py`에서 모두 비교한다.
+- 원본 ROS 2 패키지, PX4 명령 발행 노드, `mission.launch.py`, `px4_msgs` 의존성, 학업 발표 자료, 팀원 역할과 쉘 스크립트도 보존했다.
+- 원본 ROS 2 패키지는 중심 저장소의 기본 `ros2_ws/src`에 자동 설치하지 않는다. `px4_msgs` 버전 종속성과 자동 Arm/Offboard 위험 때문이다.
+- Git SHA 일치는 **소스 보존 증거**이지 실제 ROS2/PX4 SITL 실행이 성공했다는 의미가 아니다.
+- 중심 저장소 PR이 병합되고 기존 ROS2 CI가 통과하면 TwinFlight 원본은 읽기 전용 Archive **권고 대상**이다. Archive해도 GitHub 원본 URL과 소스·커밋 이력은 남는다. 영구 삭제하지 않는다.
